@@ -8,12 +8,18 @@
         echo $result;
     }
 
-<li><input type="checkbox" name="checked" form="numbers_form" />Name Here </li>
+//<li><input type="checkbox" name="checked" form="numbers_form" />Name Here </li>
 
 ?>
     <div class="wrap">
+       <div class="updated" hidden>
+       <p>
+       <strong></strong>
+       </p>
+       </div>
         <h1>SMS Messaging: Text Reminders</h1>
-        <form name="message_form" method="post" <?php echo "action=". plugins_url( 'sendMessage.php', __FILE__)?> >
+        <form name="message_form" method="post" formenctype="multipart/form-data"
+ <?php echo "action=". plugins_url( 'sendMessage.php', __FILE__)?> >
             <h2 class="title">Create a message</h2>
             <textarea type="textarea" name="message" autofocus required placeholder="Type a message here!" maxlength="160" class="messageInput large-text code"></textarea>
             <br />
@@ -22,33 +28,36 @@
             </p>
         </form>
         <hr class="darkHR"/>
-        <form class="smsAddPerson" name="newNumber_form" method="post" <?php echo "action=". plugins_url( 'editNumbersList.php', __FILE__)?>>
+        <form class="smsAddPerson" name="newNumber_form" method="post" formenctype="multipart/form-data"
+ <?php echo "action=". plugins_url( 'editNumbersList.php', __FILE__)?>>
             <h2 class="title">Add text members</h2>
-            <input type="hidden" name="type" value="create">
-            <input type="text" name="person" placeholder="Johnny Appleseed" class="regular-text code personInput" form="newNumber_form" />
-            <input type="tel" name="phoneNumber" placeholder="(111)-222-3333" class="regular-text code personInput" form="newNumber_form" />
-            <input type="submit" name="submit" value="Add Person" class="button" form="newNumber_form" />
+            <input type="hidden" name="type" value="create" required>
+            <input type="text" name="person" placeholder="Johnny Appleseed" class="regular-text code personInput" form="newNumber_form" required/>
+            <input type="tel" name="phoneNumber" placeholder="(111)-222-3333" class="regular-text code personInput" form="newNumber_form" required/>
+            <input type="submit" name="submit" value="Add Person" class="button" form="newNumber_form" onclick="editPersonList()"/>
         </form>
         <hr />
-        <form name="numbers_form" method="post" <?php echo "action=". plugins_url( 'editNumbersList.php', __FILE__)?>>
+        <form name="numbers_form" method="post" formenctype="multipart/form-data"
+ <?php echo "action=". plugins_url( 'editNumbersList.php', __FILE__)?>>
             <h2 class="title">Remove text members</h2>
-            <input type="hidden" name="type" value="create" form="numbers_form">
+            <input type="hidden" name="type" value="delete" form="numbers_form">
             <ul class="currentNumbers">
                 <?php getCurrentList() ?>
             </ul>
             <p class="submit">
-                <input type="submit" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" />
+                <input type="submit" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" onclick="editPersonList()" />
             </p>
         </form>
         <hr class="darkHR"/>
         <h1 class="title">Settings <input type="button" value="Show" class="button" onclick="toggleSettings()" name="showSettingsButton" /></h1>
-        <form name="settings_form" method="post" hidden>
+        <form name="settings_form" method="post" hidden formenctype="multipart/form-data" <?php echo "action=". plugins_url( 'editSettings.php', __FILE__)?>
+>
            <h3>Enter your Twilio account SID and phone number here</h3>
             <label>SID: <input type="text" maxlength="34" name="sid" placeholder="Enter your Twilio SID here" class="regular-text code" form="settings_form" required/></label>
             <br/>
             <label>Phone: <input type="tel" name="phone" placeholder="(111)-222-3333" class="regular-text code" form="settings_form" required/></label>
             <p class="submit">
-                <input type="submit" name="save" value="Save Settings" class="button button-primary" form="settings_form"/>
+                <input type="submit" name="save" value="Save Settings" class="button button-primary" form="settings_form" <?php echo "onclick=saveSettings('". plugins_url( 'editSettings.php', __FILE__)."')"?> />
             </p>
         </form>
     </div>

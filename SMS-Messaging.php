@@ -19,7 +19,9 @@ function addCSS() {
 }
 
 function addJS() {
+    wp_register_script('jQuery', plugins_url('jquery-2.2.0.min.js', __FILE__));
     wp_register_script('smsJS', plugins_url('sms.js', __FILE__));
+    wp_enqueue_script('jQuery');
     wp_enqueue_script('smsJS');
 }
 
@@ -31,6 +33,19 @@ function sms_admin_actions() {
     add_options_page("SMS Messaging", "SMS Messaging", 1, "SMS Messaging", "smsAdmin");
 }
 
+function create_post_type(){
+    register_post_type( 'SMS Message',
+    array(
+      'labels' => array(
+        'name' => __( 'SMS Message' ),
+        'singular_name' => __( 'SMS' )
+      ),
+      'public' => true,
+      'has_archive' => false,
+    )
+  );
+}
+
 function db_install(){
     global $wpdb;
     global $table_name;
@@ -40,7 +55,6 @@ function db_install(){
 
     $sql = "CREATE TABLE $table_name (
       id mediumint(9) NOT NULL AUTO_INCREMENT,
-      time TIMESTAMP DEFAULT '0000-00-00 00:00:00' NOT NULL,
       name text NOT NULL,
       phone_number varchar(10) NOT NULL,
       PRIMARY KEY(id)
@@ -60,6 +74,9 @@ function db_install(){
 db_install();
 add_action('admin_init', 'addCSS');
 add_action('admin_init', 'addJS');
+
+//add_action('init', 'create_post_type');
+
 add_action('admin_menu', 'sms_admin_actions');
 
 ?>

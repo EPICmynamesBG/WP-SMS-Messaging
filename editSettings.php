@@ -1,19 +1,11 @@
 <?php
-
 include_once('../../../wp-blog-header.php');
 
 global $wpdb;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    var_dump($_POST);
-
-    if ($_POST['type'] == "create"){
-        echo "Create";
-    } else if ($_POST['type'] == "delete"){
-        echo "Delete";
-    } else {
-        die("Request type error");
-    }
+    $data = verifyData();
+    saveSettings($data);
 } else {
     die("Incorret HTTP Method");
 }
@@ -35,6 +27,25 @@ function verifyData(){
     $result = array("sid"=>$_POST["sid"],
                    "phone"=>$phone);
     return $result;
+}
+
+function saveSettings($data){
+    global $wpdb;
+    $table_name = $wpdb->prefix . "SMS_config";
+    $phone = $data['phone'];
+    $sid = $data['sid'];
+
+    $sqlDel = "DELETE FROM `$table_name` WHERE 1";
+    $sqlSave = "INSERT INTO $table_name(`id`, `phone_number`, `sid`) VALUES (DEFAULT,'$phone','$sid')";
+
+    $result = $wpdb->query($sqlDel);
+
+    $result2 = $wpdb->query($sqlSave);
+    if ($result2 == 1){
+        echo json_encode(array("status"=>"success"));
+    } else {
+        echo json_encode(array("status"=>"error"));
+    }
 }
 
 ?>
