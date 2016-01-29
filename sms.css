@@ -1,0 +1,76 @@
+textarea {
+    max-width: 600px;
+    min-width: 200px;
+    resize: both;
+    min-height: 100px;
+    max-height: 300px;
+    height: 200px;
+    width: 60%;
+}
+
+.messageSubmit {}
+
+.currentNumbers {
+    list-style: none;
+}
+
+.personInput {}
+
+.smsAddPerson > input[type="text"], .smsAddPerson > input[type='tel'] {
+    width: 200px;
+    resize: horizontal;
+}
+
+.delete-button {
+    background: #C80000 none repeat scroll 0% 0% !important;
+    border-color: #B40000 #A00 #A00 !important;
+    color: #FFF !important;
+    -webkit-box-shadow: 0px 1px 0px #A00 !important;
+    box-shadow: 0px 1px 0px #A00 !important;
+    text-shadow: 0px -1px 1px #A00, 1px 0px 1px #A00, 0px 1px 1px #A00, -1px 0px 1px #A00 !important;
+}
+
+.delete-button:focus, .delete-button:hover {
+    background: #D4070E !important;
+    border-color: #A00 !important;
+    color: #FFF;
+    -webkit-box-shadow: 0px 1px 0px #A00;
+    box-shadow: 0px 1px 0px #A00;
+}
+
+.delete-button:active {
+    background: #B40000 !important;
+    border-color: #A00 !important;;
+	-webkit-box-shadow:inset 0 2px 0 #A00;
+	box-shadow:inset 0 2px 0 #A00;
+}
+
+.darkHR {
+    border-width: 1px 0px;
+    border-style: solid none;
+    border-color: #444;
+    color: #444;
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+    display: block;
+    -webkit-margin-before: 0.5em;
+    -webkit-margin-after: 0.5em;
+    -webkit-margin-start: auto;
+    -webkit-margin-end: auto;
+    -webkit-border: 0;
+    -webkit-border-top: 1px solid #444;
+    -webkit-border-bottom: 1px solid #E4E4E4;
+}
+
+form[name='settings_form'] input[name="sid"] {
+    max-width: 400px;
+    width: 300px;
+    resize: horizontal;
+}
+
+form[name='settings_form'] input[name="phone"] {
+    width: 150px;
+}
