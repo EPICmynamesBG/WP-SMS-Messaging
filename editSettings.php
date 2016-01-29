@@ -20,6 +20,7 @@ function verifyData(){
     $phone = str_replace(")", "", $phone);
     $phone = str_replace("-", "", $phone);
     $phone = str_replace("+", "", $phone);
+    $phone = str_replace(" ", "", $phone);
     if (strlen($phone) != 10){
         echo("Bad Phone");
         die("Phone number must be 10 digits");
