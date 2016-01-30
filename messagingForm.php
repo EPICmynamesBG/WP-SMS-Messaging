@@ -21,15 +21,15 @@
         }
     }
 
-    function getTwilioSID(){
+    function getTwilioAccountSID(){
         global $wpdb;
         $table = $wpdb->prefix . "SMS_config";
-        $sql = "SELECT `sid` FROM `$table` WHERE 1;";
+        $sql = "SELECT `account_sid` FROM `$table` WHERE 1;";
         $result = $wpdb->get_results($sql);
         if (count($result) == 0){
             return "";
         }
-        return $result[0]->sid;
+        return $result[0]->account_sid;
     }
 
     function getTwilioNumber(){
@@ -46,6 +46,28 @@
         return $phone;
     }
 
+    function getTwilioAccountAuth(){
+        global $wpdb;
+        $table = $wpdb->prefix . "SMS_config";
+        $sql = "SELECT `account_auth` FROM `$table` WHERE 1;";
+        $result = $wpdb->get_results($sql);
+        if (count($result) == 0){
+            return "";
+        }
+        return $result[0]->account_auth;
+    }
+
+    function getTwilioServiceSID(){
+        global $wpdb;
+        $table = $wpdb->prefix . "SMS_config";
+        $sql = "SELECT `service_sid` FROM `$table` WHERE 1;";
+        $result = $wpdb->get_results($sql);
+        if (count($result) == 0){
+            return "";
+        }
+        return $result[0]->service_sid;
+    }
+
 ?>
     <div class="wrap">
        <div class="updated" hidden>
@@ -54,14 +76,13 @@
        </p>
        </div>
         <h1>SMS Messaging: Text Reminders</h1>
-        <form name="message_form" method="post" formenctype="multipart/form-data"
- <?php echo "action=". plugins_url( 'sendMessage.php', __FILE__)?> >
+        <form name="message_form" >
             <h2 class="title">Create a message</h2>
-            <h4 class="title">Notice: Message will be sent to all people in the list below.</h4>
+            <h4 class="title">Notice: Message will be sent to all people in the list below. Max chars: 160.</h4>
             <textarea type="textarea" name="message" autofocus required placeholder="Type a message here!" maxlength="160" class="messageInput large-text code"></textarea>
             <br />
             <p class="submit">
-                <input type="submit" name="send" value="Send Message" class="button button-primary" class="button button-primary" />
+                <input type="button" name="send" value="Send Message" class="button button-primary" class="button button-primary" <?php echo "onclick=sendMessage('". plugins_url( 'sendMessage.php', __FILE__)."')"?> />
             </p>
         </form>
         <hr class="darkHR"/>
@@ -85,8 +106,12 @@
         <h1 class="title">Settings <input type="button" value="Show" class="button" onclick="toggleSettings()" name="showSettingsButton" /></h1>
         <form name="settings_form" method="post" hidden formenctype="multipart/form-data" <?php echo "action=". plugins_url( 'editSettings.php', __FILE__)?>
 >
-           <h3>Enter your Twilio account SID and phone number here</h3>
-            <label>SID: <input type="text" maxlength="34" name="sid" placeholder="Enter your Twilio SID here" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioSID().'"'?>/></label>
+           <h3>Enter your Twilio account info here</h3>
+            <label>Account SID: <input type="text" maxlength="34" name="accountSID" placeholder="Twilio Account SID" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioAccountSID().'"'?>/></label>
+            <br/>
+            <label>Account AuthToken: <input type="text" maxlength="32" name="accountAuth" placeholder="Twilio AuthToken" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioAccountAuth().'"'?>/></label>
+            <br />
+            <label>Messaging Service SID: <input type="text" maxlength="34" name="serviceSID" placeholder="Twilio Service SID" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioServiceSID().'"'?>/></label>
             <br/>
             <label>Phone: <input type="tel" name="phone" placeholder="(111)-222-3333" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioNumber().'"'?>/></label>
             <p class="submit">

@@ -12,15 +12,28 @@ function toggleSettings() {
 }
 
 function saveSettings(url) {
-    var sid = $('[name="sid"]').val();
+    var accountSID = $('[name="accountSID"]').val();
+    var accountAuth = $('[name="accountAuth"]').val();
+    var serviceSID = $('[name="serviceSID"]').val();
     var phone = $('form[name="settings_form"] input[name="phone"]').val();
-    if (sid.length != 34 || phone == "") {
+
+    if (accountSID.length != 34 || accountAuth.length != 32 || serviceSID.length != 34) {
+        if (accountSID.length != 34){
+            $('.updated p strong').text("Error: AccountSID must be 34 chars");
+        } else if (accountAuth.length != 32){
+            $('.updated p strong').text("Error: AccountAuth must be 32 chars");
+        } else {
+            $('.updated p strong').text("Error: ServiceSID must be 34 chars");
+        }
+        $('.updated').removeAttr('hidden');
         return;
     }
     var data = {
-        'sid': sid,
+        'account_sid': accountSID,
+        'account_auth':accountAuth,
+        'service_sid':serviceSID,
         'phone': phone
-    }
+    };
 
     $.post({
         url: url,
@@ -30,7 +43,7 @@ function saveSettings(url) {
             if (returnArr['status'] == "success") {
                 $('.updated p strong').text("Settings updated");
             } else {
-                $('.updated p strong').text("Error: "+returnArr['message']);
+                $('.updated p strong').text("Error: " + returnArr['message']);
             }
             $('.updated').removeAttr('hidden');
         }
@@ -46,9 +59,9 @@ function editPersonList(action) {
         var phone = $('.smsAddPerson input[name="phoneNumber"]').val();
         if (name.length != 0 && phone.length != 0) {
             var data = {
-                'type':type,
-                'name':name,
-                'phone':phone
+                'type': type,
+                'name': name,
+                'phone': phone
             };
 
             $.post({
@@ -60,7 +73,7 @@ function editPersonList(action) {
                     if (returnArr['status'] == "success") {
                         $('.updated p strong').text("Person added");
                     } else {
-                        $('.updated p strong').text("Error: "+returnArr['message']);
+                        $('.updated p strong').text("Error: " + returnArr['message']);
                     }
                     $('.updated').removeAttr('hidden');
                 }
@@ -73,16 +86,18 @@ function editPersonList(action) {
     } else if (type == "delete") {
         var nameList = $('.currentNumbers').children('li');
         var checkedArray = [];
-        for (var i = 0; i < nameList.length; i++){
+        for (var i = 0; i < nameList.length; i++) {
             var li = nameList[i];
             var checkbox = $(li).children('input')[0];
-            if( $(checkbox).is(":checked")){
+            if ($(checkbox).is(":checked")) {
                 checkedArray.push($(checkbox).val());
             }
         }
-        if (checkedArray.length > 0){
-            var data = {"type": type,
-                "ids": checkedArray};
+        if (checkedArray.length > 0) {
+            var data = {
+                "type": type,
+                "ids": checkedArray
+            };
 
             $.post({
                 url: url,
@@ -92,7 +107,7 @@ function editPersonList(action) {
                     if (returnArr['status'] == "success") {
                         $('.updated p strong').text("Person(s) deleted");
                     } else {
-                        $('.updated p strong').text("Error: "+returnArr['message']);
+                        $('.updated p strong').text("Error: " + returnArr['message']);
                     }
                     $('.updated').removeAttr('hidden');
                 }
@@ -106,4 +121,37 @@ function editPersonList(action) {
         $('.updated').removeAttr('hidden');
         return;
     }
+}
+
+function sendMessage(url) {
+    var message = $('form[name="message_form"] textarea').val();
+    if (message.length == 0) {
+        $('.updated p strong').text("Error: Message cannot be empty.");
+        $('.updated').removeAttr('hidden');
+        return;
+    }
+
+    var data = {
+        'message': message
+    };
+    var sendButton = $('form[name="message_form"] input[name="send"]');
+    sendButton.val("Sending...");
+    sendButton.prop('disabled', true);
+
+    $.post({
+        url: url,
+        data: data,
+        success: function (data) {
+            console.log(data);
+//            var returnArr = $.parseJSON(data);
+//            if (returnArr['status'] == "success") {
+//                $('.updated p strong').text("Message sent");
+//            } else {
+//                $('.updated p strong').text("Error: " + returnArr['message']);
+//            }
+//            $('.updated').removeAttr('hidden');
+            sendButton.val("Send Message");
+            sendButton.prop('disabled', false);
+        }
+    });
 }
