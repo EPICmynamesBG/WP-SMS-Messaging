@@ -5,7 +5,7 @@
         global $wpdb;
         $table = $wpdb->prefix . "SMS";
 
-        $sql = "SELECT name, phone_number FROM $table;";
+        $sql = "SELECT * FROM $table;";
         $result = $wpdb->get_results($sql);
         if (count($result) == 0){
             echo "<li>Looks like there's no one here yet. Add someone above!</li>";
@@ -13,9 +13,10 @@
             foreach($result as $value) {
                 $name = $value->name;
                 $phone = $value->phone_number;
+                $id = $value->id;
                 $pArr = str_split($phone);
                 $phone = "(".$pArr[0].$pArr[1].$pArr[2].")-".$pArr[3].$pArr[4].$pArr[5]."-".$pArr[6].$pArr[7].$pArr[8].$pArr[9];
-                echo '<li><input type="checkbox" name="checked" form="numbers_form" />'.$name.': '.$phone.'</li>';
+                echo '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.'</li>';
             }
         }
     }
@@ -56,6 +57,7 @@
         <form name="message_form" method="post" formenctype="multipart/form-data"
  <?php echo "action=". plugins_url( 'sendMessage.php', __FILE__)?> >
             <h2 class="title">Create a message</h2>
+            <h4 class="title">Notice: Message will be sent to all people in the list below.</h4>
             <textarea type="textarea" name="message" autofocus required placeholder="Type a message here!" maxlength="160" class="messageInput large-text code"></textarea>
             <br />
             <p class="submit">
@@ -65,20 +67,18 @@
         <hr class="darkHR"/>
         <form class="smsAddPerson" name="newNumber_form">
             <h2 class="title">Add text members</h2>
-            <input type="hidden" name="type" value="create" required>
             <input type="text" name="person" placeholder="Johnny Appleseed" class="regular-text code personInput" form="newNumber_form" required/>
             <input type="tel" name="phoneNumber" placeholder="(111)-222-3333" class="regular-text code personInput" form="newNumber_form" required/>
-            <input type="button" name="submit" value="Add Person" class="button" onclick="editPersonList()"/>
+            <input type="button" name="button" value="Add Person" class="button" <?php echo "onclick=editPersonList('". plugins_url( 'editNumbersList.php', __FILE__)."?create')" ?> />
         </form>
         <hr />
         <form name="numbers_form">
             <h2 class="title">Remove text members</h2>
-            <input type="hidden" name="type" value="delete" form="numbers_form">
             <ul class="currentNumbers">
                 <?php getCurrentList() ?>
             </ul>
             <p class="submit">
-                <input type="submit" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" onclick="editPersonList()" />
+                <input type="button" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" <?php echo "onclick=editPersonList('". plugins_url( 'editNumbersList.php', __FILE__)."?delete')" ?> />
             </p>
         </form>
         <hr class="darkHR"/>
