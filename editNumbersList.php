@@ -64,14 +64,26 @@ function create($data){
 }
 
 function delete(){
-
-//    if ($result2 == 1){
-//        echo json_encode(array("status"=>"success"));
-//    } else {
-//        echo json_encode(array("status"=>"error",
-//                              "message"=>"Query execution error"));
-//    }
-    echo "Delete";
+    global $wpdb;
+    $table_name = $wpdb->prefix . "SMS";
+    $ids = $_POST['ids'];
+    $len = count($ids);
+    $builder = "";
+    for ($i = 0; $i < $len; $i++){
+        $id = $ids[$i];
+        $builder = $builder . "`id`='$id'";
+        if ($i != ($len - 1)){
+            $builder = $builder . " OR ";
+        }
+    }
+    $sql = "DELETE FROM `wp_SMS` WHERE $builder;";
+    $result = $wpdb->query($sql);
+    if ($result >= 1){
+        echo json_encode(array("status"=>"success"));
+    } else {
+        echo json_encode(array("status"=>"error",
+                              "message"=>"Query execution error. Unable to delete numbers."));
+    }
 }
 
 ?>
