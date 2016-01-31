@@ -1,6 +1,9 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include_once('../../../wp-load.php');
+include_once('./SMSLookup.php');
 
 global $wpdb;
 
@@ -39,6 +42,7 @@ function getAccountInfo(){
     }
     return $result[0];
 }
+
 
 function sendMessage(){
     $account = getAccountInfo();
