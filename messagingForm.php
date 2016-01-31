@@ -47,51 +47,15 @@ error_reporting(E_ALL);
         }
     }
 
-    function getTwilioAccountSID(){
+    function getCurrentEmail(){
         global $wpdb;
         $table = $wpdb->prefix . "SMS_config";
-        $sql = "SELECT `account_sid` FROM `$table` WHERE 1;";
+        $sql = "SELECT `from_email` FROM `$table` WHERE 1;";
         $result = $wpdb->get_results($sql);
         if (count($result) == 0){
             return "";
         }
-        return $result[0]->account_sid;
-    }
-
-    function getTwilioNumber(){
-        global $wpdb;
-        $table = $wpdb->prefix . "SMS_config";
-        $sql = "SELECT `phone_number` FROM `$table` WHERE 1;";
-        $result = $wpdb->get_results($sql);
-        if (count($result) == 0){
-            return "";
-        }
-        $phone = $result[0]->phone_number;
-        $pArr = str_split($phone);
-        $phone = "(".$pArr[0].$pArr[1].$pArr[2].")-".$pArr[3].$pArr[4].$pArr[5]."-".$pArr[6].$pArr[7].$pArr[8].$pArr[9];
-        return $phone;
-    }
-
-    function getTwilioAccountAuth(){
-        global $wpdb;
-        $table = $wpdb->prefix . "SMS_config";
-        $sql = "SELECT `account_auth` FROM `$table` WHERE 1;";
-        $result = $wpdb->get_results($sql);
-        if (count($result) == 0){
-            return "";
-        }
-        return $result[0]->account_auth;
-    }
-
-    function getTwilioServiceSID(){
-        global $wpdb;
-        $table = $wpdb->prefix . "SMS_config";
-        $sql = "SELECT `service_sid` FROM `$table` WHERE 1;";
-        $result = $wpdb->get_results($sql);
-        if (count($result) == 0){
-            return "";
-        }
-        return $result[0]->service_sid;
+        return $result[0]->from_email;
     }
 
 ?>
@@ -137,13 +101,8 @@ error_reporting(E_ALL);
         <form name="settings_form" method="post" hidden formenctype="multipart/form-data" <?php echo "action=". plugins_url( 'editSettings.php', __FILE__)?>
 >
            <h3>Enter your Twilio account info here</h3>
-            <label>Account SID: <input type="text" maxlength="34" name="accountSID" placeholder="Twilio Account SID" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioAccountSID().'"'?>/></label>
-            <br/>
-            <label>Account AuthToken: <input type="text" maxlength="32" name="accountAuth" placeholder="Twilio AuthToken" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioAccountAuth().'"'?>/></label>
-            <br />
-            <label>Messaging Service SID: <input type="text" maxlength="34" name="serviceSID" placeholder="Twilio Service SID" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioServiceSID().'"'?>/></label>
-            <br/>
-            <label>Phone: <input type="tel" name="phone" placeholder="(111)-222-3333" class="regular-text code" form="settings_form" required <?php echo 'value="'.getTwilioNumber().'"'?>/></label>
+            <label>From email: <input type="email" maxlength="40" name="from_email" placeholder="example@example.com" class="regular-text code" form="settings_form" required <?php echo 'value="'.getCurrentEmail().'"'?>/></label>
+
             <p class="submit">
                 <input type="submit" name="save" value="Save Settings" class="button button-primary" form="settings_form" <?php echo "onclick=saveSettings('". plugins_url( 'editSettings.php', __FILE__)."')"?> />
             </p>

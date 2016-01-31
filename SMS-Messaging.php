@@ -63,11 +63,8 @@ function db_install(){
     ) $charset_collate;";
 
     $sql2 = "CREATE TABLE $table_name2 (
-      account_sid varchar(34) NOT NULL,
-      account_auth varchar(32) NOT NULL,
-      service_sid varchar(34) NOT NULL,
-      phone_number varchar(10) NOT NULL,
-      PRIMARY KEY(account_sid)
+      from_email varchar(40) NOT NULL,
+      PRIMARY KEY(from_email)
     ) $charset_collate;";
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

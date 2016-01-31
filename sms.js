@@ -12,27 +12,10 @@ function toggleSettings() {
 }
 
 function saveSettings(url) {
-    var accountSID = $('[name="accountSID"]').val();
-    var accountAuth = $('[name="accountAuth"]').val();
-    var serviceSID = $('[name="serviceSID"]').val();
-    var phone = $('form[name="settings_form"] input[name="phone"]').val();
+    var email = $('[name="from_email"]').val();
 
-    if (accountSID.length != 34 || accountAuth.length != 32 || serviceSID.length != 34) {
-        if (accountSID.length != 34){
-            $('.updated p strong').text("Error: AccountSID must be 34 chars");
-        } else if (accountAuth.length != 32){
-            $('.updated p strong').text("Error: AccountAuth must be 32 chars");
-        } else {
-            $('.updated p strong').text("Error: ServiceSID must be 34 chars");
-        }
-        $('.updated').removeAttr('hidden');
-        return;
-    }
     var data = {
-        'account_sid': accountSID,
-        'account_auth':accountAuth,
-        'service_sid':serviceSID,
-        'phone': phone
+        'email': email
     };
 
     $.post({
