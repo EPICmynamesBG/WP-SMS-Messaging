@@ -1,39 +1,52 @@
 <?php
-class TextBeltSMS
-{
-	const TEXTBELT_URL = 'http://textbelt.com/text';
 
-	private $message;
-    private $to;
+include('./FoneFinder.php');
+
+class SMSLookup
+{
+    const gateways = array
+        (
+            'Verizon' => 'vtext.com',
+            'ATT'     => 'txt.att.net',
+            'Qwest'   => 'qwestmp.com',
+            'Sprint'  => 'messaging.sprintpcs.com',
+            'T-Mobile'  => 'tmomail.net',
+            'Alltel' => 'message.alltel.com',
+            'Boost' => 'myboostmobile.com',
+            'Cricket' => 'sms.mycricket.com',
+            'MetroPCS' => 'mymetropcs.com',
+        );
+
+	private $cc;
+    private $number;
 
 	public function __construct()
 	{
-		$this->message = "";
-        $this->to = "";
+		$this->cc = "1";
+        $this->number = "";
 	}
 
-    public function to($str){
-        $this->to = $str;
+    public function cc($str){
+        $this->cc = $str;
     }
 
-    public function message($str){
-        $this->message = $str;
+    public function number($str){
+        $this->number = $str;
     }
 
-	public function send()
+	public function lookup()
 	{
-		$message = http_build_query([
-			'number' => $this->to,
-		    'message' => $this->message
-		]);
-        var_dump($this);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, self::TEXTBELT_URL );
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$response = curl_exec ($ch);
-		curl_close ($ch);
-		return $response;
+		$ff = new FoneFinder($this->number);
+        $result = $ff->queryNow();
+		return $result;
 	}
+
+    public function getGateway($carrier){
+        if (self::gateways[$carrier] != null){
+            $gate = self::gateways[$carrier];
+            return $this->number."@".$gate;
+        } else {
+            return NULL;
+        }
+    }
 }

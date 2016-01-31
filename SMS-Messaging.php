@@ -57,6 +57,8 @@ function db_install(){
       id mediumint(9) NOT NULL AUTO_INCREMENT,
       name text NOT NULL,
       phone_number varchar(10) NOT NULL,
+      carrier varchar(30) NOT NULL,
+      sms_email varchar(35) NOT NULL,
       PRIMARY KEY(id)
     ) $charset_collate;";
 

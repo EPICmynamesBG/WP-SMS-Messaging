@@ -57,11 +57,13 @@ function editPersonList(action) {
     if (type == "create") {
         var name = $('.smsAddPerson input[name="person"]').val();
         var phone = $('.smsAddPerson input[name="phoneNumber"]').val();
+        var carrier = $('select[name="carrier"] :selected').text();
         if (name.length != 0 && phone.length != 0) {
             var data = {
                 'type': type,
                 'name': name,
-                'phone': phone
+                'phone': phone,
+                'carrier': carrier
             };
 
             $.post({

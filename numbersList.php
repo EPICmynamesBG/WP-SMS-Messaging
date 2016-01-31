@@ -1,6 +1,7 @@
 <?php
 
 include_once('../../../wp-load.php');
+include('./SMSLookup.php');
 
 global $wpdb;
 
@@ -38,7 +39,8 @@ function verifyData(){
         die();
     }
     $result = array("name"=>$_POST["name"],
-                   "phone"=>$phone);
+                   "phone"=>$phone,
+                   "carrier"=>$_POST["carrier"]);
     return $result;
 }
 
@@ -47,13 +49,25 @@ function create($data){
     $table_name = $wpdb->prefix . "SMS";
     $phone = $data['phone'];
     $name = $data['name'];
+    $carrier = $data['carrier'];
+    $lookup = new SMSLookup();
+    $lookup->number($phone);
+    if ($carrier == null || $carrier == "" || $carrier == "None"){
+        $result = $lookup->lookup();
+        $carrier = $result['carrier'];
+        $smsEmail = $result['email'];
+    } else {
+        $smsEmail = $lookup->getGateway($carrier);
+    }
+
     $sqlCheck = "SELECT * FROM `$table_name` WHERE `phone_number`='$phone';";
+
     $result = $wpdb->query($sqlCheck);
     if ($result != 0){
         echo json_encode(array("status"=>"error",
                               "message"=>"Number already exists"));
     } else {
-         $sql = "INSERT INTO $table_name(`id`, `name`, `phone_number`) VALUES (DEFAULT,'$name','$phone')";
+         $sql = "INSERT INTO $table_name(`id`, `name`, `phone_number`, `carrier`, `sms_email`) VALUES (DEFAULT,'$name','$phone','$carrier','$smsEmail')";
         $result = $wpdb->query($sql);
         if ($result == 1){
             echo json_encode(array("status"=>"success"));
@@ -102,10 +116,11 @@ function getCurrentList(){
                 $name = $value->name;
                 $phone = $value->phone_number;
                 $id = $value->id;
+                $carrier = $value->carrier;
                 $pArr = str_split($phone);
                 $phone = "(".$pArr[0].$pArr[1].$pArr[2].")-".$pArr[3].$pArr[4].$pArr[5]."-".$pArr[6].$pArr[7].$pArr[8].$pArr[9];
 
-                array_push($returnArr, '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.'</li>');
+                array_push($returnArr, '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.' ('.$carrier.')</li>');
             }
         }
         echo json_encode($returnArr);

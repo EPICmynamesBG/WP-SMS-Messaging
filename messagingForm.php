@@ -1,5 +1,10 @@
 <?php
-    include_once('../../../wp-blog-header.php');
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 
     function getCurrentList(){
         global $wpdb;
@@ -14,10 +19,31 @@
                 $name = $value->name;
                 $phone = $value->phone_number;
                 $id = $value->id;
+                $carrier = $value->carrier;
                 $pArr = str_split($phone);
                 $phone = "(".$pArr[0].$pArr[1].$pArr[2].")-".$pArr[3].$pArr[4].$pArr[5]."-".$pArr[6].$pArr[7].$pArr[8].$pArr[9];
-                echo '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.'</li>';
+                echo '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.' ('.$carrier.')</li>';
             }
+        }
+    }
+
+
+    function getCarriers(){
+        $gateways = array
+        (
+            'None' => '',
+            'Verizon' => 'vtext.com',
+            'ATT'     => 'txt.att.net',
+            'Qwest'   => 'qwestmp.com',
+            'Sprint'  => 'messaging.sprintpcs.com',
+            'T-Mobile'  => 'tmomail.net',
+            'Alltel' => 'message.alltel.com',
+            'Boost' => 'myboostmobile.com',
+            'Cricket' => 'sms.mycricket.com',
+            'MetroPCS' => 'mymetropcs.com',
+        );
+        foreach($gateways as $key => $value){
+            echo '<option value="'.$value.'">'.$key.'</option>';
         }
     }
 
@@ -88,8 +114,12 @@
         <hr class="darkHR"/>
         <form class="smsAddPerson" name="newNumber_form">
             <h2 class="title">Add text members</h2>
+            <h5 class="title">Selecting carrier is optional, but suggested if known.</h5>
             <input type="text" name="person" placeholder="Johnny Appleseed" class="regular-text code personInput" form="newNumber_form" required/>
             <input type="tel" name="phoneNumber" placeholder="(111)-222-3333" class="regular-text code personInput" form="newNumber_form" required/>
+            <select name="carrier">
+                <?php getCarriers(); ?>
+            </select>
             <input type="button" name="button" value="Add Person" class="button" <?php echo "onclick=editPersonList('". plugins_url( 'numbersList.php', __FILE__)."?create')" ?> />
         </form>
         <hr />
