@@ -68,7 +68,6 @@ function editPersonList(action) {
                 url: url,
                 data: data,
                 success: function (data) {
-                    console.log(data);
                     var returnArr = $.parseJSON(data);
                     if (returnArr['status'] == "success") {
                         $('.updated p strong').text("Person added");
@@ -76,6 +75,7 @@ function editPersonList(action) {
                         $('.updated p strong').text("Error: " + returnArr['message']);
                     }
                     $('.updated').removeAttr('hidden');
+                    updateNumberList(url);
                 }
             });
         } else {
@@ -110,6 +110,7 @@ function editPersonList(action) {
                         $('.updated p strong').text("Error: " + returnArr['message']);
                     }
                     $('.updated').removeAttr('hidden');
+                    updateNumberList(url);
                 }
             });
         } else {
@@ -145,11 +146,11 @@ function sendMessage(url) {
             customUpdate($.parseJSON(data));
             sendButton.val("Send Message");
             sendButton.prop('disabled', false);
+            $('form[name="message_form"] textarea').val("");
         }
     });
 
     function customUpdate(returnData){
-        console.log(returnData);
         var buildStr = "Message send results.\n";
         for (var i = 0; i < returnData.length; i++){
             var item = returnData[i];
@@ -160,3 +161,20 @@ function sendMessage(url) {
         $('.updated').removeAttr('hidden');
     };
 }
+
+function updateNumberList(url){
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data){
+            $('.currentNumbers').children('li').remove();
+            var parseData = $.parseJSON(data);
+            for (var i = 0; i < parseData.length; i++){
+                var li = $(parseData[i]);
+                $('.currentNumbers').append(li).fadeIn();
+            }
+        }
+    });
+    $('.smsAddPerson input[name="person"]').val("");
+    $('.smsAddPerson input[name="phoneNumber"]').val("");
+};

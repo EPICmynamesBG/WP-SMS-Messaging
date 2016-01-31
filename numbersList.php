@@ -14,12 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         echo json_encode(array("status"=>"error",
                               "message"=>"Invalid request type."));
-        die("Request type error");
+        die();
     }
+} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    getCurrentList();
 } else {
     echo json_encode(array("status"=>"error",
                               "message"=>"Bad HTTP method"));
-    die("Incorret HTTP Method");
+    die();
 }
 
 function verifyData(){
@@ -33,7 +35,7 @@ function verifyData(){
     if (strlen($phone) != 10){
         echo json_encode(array("status"=>"error",
                               "message"=>"Phone is not 10 digits"));
-        die("Phone number must be 10 digits");
+        die();
     }
     $result = array("name"=>$_POST["name"],
                    "phone"=>$phone);
@@ -85,5 +87,28 @@ function delete(){
                               "message"=>"Query execution error. Unable to delete numbers."));
     }
 }
+
+function getCurrentList(){
+        global $wpdb;
+        $table = $wpdb->prefix . "SMS";
+
+        $sql = "SELECT * FROM $table;";
+        $result = $wpdb->get_results($sql);
+        $returnArr = array();
+        if (count($result) == 0){
+            array_push($returnArr, "<li>Looks like there's no one here yet. Add someone above!</li>");
+        } else {
+            foreach($result as $value) {
+                $name = $value->name;
+                $phone = $value->phone_number;
+                $id = $value->id;
+                $pArr = str_split($phone);
+                $phone = "(".$pArr[0].$pArr[1].$pArr[2].")-".$pArr[3].$pArr[4].$pArr[5]."-".$pArr[6].$pArr[7].$pArr[8].$pArr[9];
+
+                array_push($returnArr, '<li><input type="checkbox" name="checked" form="numbers_form" value="'.$id.'" />'.$name.': '.$phone.'</li>');
+            }
+        }
+        echo json_encode($returnArr);
+    }
 
 ?>

@@ -90,7 +90,7 @@
             <h2 class="title">Add text members</h2>
             <input type="text" name="person" placeholder="Johnny Appleseed" class="regular-text code personInput" form="newNumber_form" required/>
             <input type="tel" name="phoneNumber" placeholder="(111)-222-3333" class="regular-text code personInput" form="newNumber_form" required/>
-            <input type="button" name="button" value="Add Person" class="button" <?php echo "onclick=editPersonList('". plugins_url( 'editNumbersList.php', __FILE__)."?create')" ?> />
+            <input type="button" name="button" value="Add Person" class="button" <?php echo "onclick=editPersonList('". plugins_url( 'numbersList.php', __FILE__)."?create')" ?> />
         </form>
         <hr />
         <form name="numbers_form">
@@ -99,7 +99,7 @@
                 <?php getCurrentList() ?>
             </ul>
             <p class="submit">
-                <input type="button" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" <?php echo "onclick=editPersonList('". plugins_url( 'editNumbersList.php', __FILE__)."?delete')" ?> />
+                <input type="button" name="delete" value="Delete Selected" class="button delete-button" class="button button-primary" <?php echo "onclick=editPersonList('". plugins_url( 'numbersList.php', __FILE__)."?delete')" ?> />
             </p>
         </form>
         <hr class="darkHR"/>
