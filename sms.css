@@ -1,3 +1,7 @@
+.updated p strong {
+    white-space: pre;
+}
+
 textarea {
     max-width: 600px;
     min-width: 200px;
@@ -65,7 +69,7 @@ textarea {
     -webkit-border-bottom: 1px solid #E4E4E4;
 }
 
-form[name='settings_form'] input[name="sid"] {
+form[name='settings_form'] input[type="text"] {
     max-width: 400px;
     width: 300px;
     resize: horizontal;

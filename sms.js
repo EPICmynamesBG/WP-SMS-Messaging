@@ -142,16 +142,21 @@ function sendMessage(url) {
         url: url,
         data: data,
         success: function (data) {
-            console.log(data);
-//            var returnArr = $.parseJSON(data);
-//            if (returnArr['status'] == "success") {
-//                $('.updated p strong').text("Message sent");
-//            } else {
-//                $('.updated p strong').text("Error: " + returnArr['message']);
-//            }
-//            $('.updated').removeAttr('hidden');
+            customUpdate($.parseJSON(data));
             sendButton.val("Send Message");
             sendButton.prop('disabled', false);
         }
     });
+
+    function customUpdate(returnData){
+        console.log(returnData);
+        var buildStr = "Message send results.\n";
+        for (var i = 0; i < returnData.length; i++){
+            var item = returnData[i];
+            var temp = "\tMessage to "+ item['To'] +" "+ item['Status']+"\n";
+            buildStr += temp;
+        };
+        $('.updated p strong').text(buildStr);
+        $('.updated').removeAttr('hidden');
+    };
 }
