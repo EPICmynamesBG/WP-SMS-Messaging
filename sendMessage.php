@@ -43,7 +43,7 @@ function getAccountInfo(){
 function sendMessage(){
     $account = getAccountInfo();
     $url = "https://api.twilio.com/2010-04-01/Accounts/".$account->account_sid."/Messages";
-//    $twilio = new Services_Twilio($account->account_sid, $account->account_auth);
+
     $numberArr = getNumbers();
     $resultArr = [];
     $auth = $account->account_sid. ":" .$account->account_auth;
@@ -51,24 +51,23 @@ function sendMessage(){
     foreach($numberArr as $num){
         $number = $num->phone_number;
 
-//        $result = $twilio->account->messages->create(array(
-//            "From"=> "+1".$account->phone_number,
-//            "To"=> "+1".$number,
-//            "Body"=> $_POST['message']
-//        ));
-        if($account->service_sid != null && $account->service_sid != ""){
+        if($account->service_sid != null
+           && $account->service_sid != ""){
             $data = array(
                 "MessagingServiceSid" => $account->service_sid,
                 "To" => "+1".$number,
                 "Body" => $_POST['message']
             );
-        } else if ($account->phone_number != null && $account->phone_number != ""){
+        }
+        else if ($account->phone_number != null
+                 && $account->phone_number != ""){
             $data = array(
-                "MessagingServiceSid" => $account->service_sid,
+                "From" => $account->phone_number,
                 "To" => "+1".$number,
                 "Body" => $_POST['message']
             );
-        } else {
+        }
+        else {
             echo json_encode(array("status"=>"error",
                               "message"=>"No phone or service SID saved."));
             die();
