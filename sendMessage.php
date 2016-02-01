@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include_once('../../../wp-load.php');
+include('./MailChimp.php');
 
 global $wpdb;
 
@@ -43,35 +44,41 @@ function getSettings(){
     }
     return $result[0];
 }
+//
+//function sendMessage($settings){
+//    $numberArr = getMailList();
+//    $resultsArr = array();
+//    $subject = "Practice Reminder";
+//    $message = $_POST['message'];
+//    $from = $settings->from_email;
+//
+//    $headers = "From: ".$from . "\r\n".
+//        'X-Mailer: PHP/' . phpversion();
+//
+//    foreach($numberArr as $row){
+//        $to = $row->sms_email;
+//        $results = mail("bgroff@bsu.edu", $subject, $message, $headers, "-f$from");
+//        $temp = array(
+//            'mailStatus'=> $results,
+//            'number'=> $row->phone_number,
+//            'sms_email'=> $row->sms_email,
+//            'mailContents'=> array(
+//                'to' => $to,
+//                'subject' => $subject,
+//                'message' => $message,
+//                'headers' => $headers
+//            )
+//        );
+//
+//        array_push($resultsArr, $temp);
+//    }
+//    echo json_encode($resultsArr);
+//}
 
 function sendMessage($settings){
-    $numberArr = getMailList();
-    $resultsArr = array();
-    $subject = "Practice Reminder";
-    $message = $_POST['message'];
-    $from = $settings->from_email;
-
-    $headers = "From: ".$from . "\r\n".
-        'X-Mailer: PHP/' . phpversion();
-
-    foreach($numberArr as $row){
-        $to = $row->sms_email;
-        $results = mail("bgroff@bsu.edu", $subject, $message, $headers, "-f$from");
-        $temp = array(
-            'mailStatus'=> $results,
-            'number'=> $row->phone_number,
-            'sms_email'=> $row->sms_email,
-            'mailContents'=> array(
-                'to' => $to,
-                'subject' => $subject,
-                'message' => $message,
-                'headers' => $headers
-            )
-        );
-
-        array_push($resultsArr, $temp);
-    }
-    echo json_encode($resultsArr);
+    $mc = new MailChimp;
+    $mc->accountInfo("BSU Ultimate", "40b3a2130acf13c3799957cf63eefe1f-us12");
+    echo json_encode($mc->getCampaigns());
 }
 
 
