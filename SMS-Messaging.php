@@ -30,20 +30,7 @@ function smsAdmin(){
 }
 
 function sms_admin_actions() {
-    add_options_page("SMS Messaging", "SMS Messaging", 1, "SMS Messaging", "smsAdmin");
-}
-
-function create_post_type(){
-    register_post_type( 'SMS Message',
-    array(
-      'labels' => array(
-        'name' => __( 'SMS Message' ),
-        'singular_name' => __( 'SMS' )
-      ),
-      'public' => true,
-      'has_archive' => false,
-    )
-  );
+    add_option s_page("SMS Messaging", "SMS Messaging", 1, "SMS Messaging", "smsAdmin");
 }
 
 function db_install(){
@@ -76,8 +63,6 @@ function db_install(){
 db_install();
 add_action('admin_init', 'addCSS');
 add_action('admin_init', 'addJS');
-
-//add_action('init', 'create_post_type');
 
 add_action('admin_menu', 'sms_admin_actions');
 
